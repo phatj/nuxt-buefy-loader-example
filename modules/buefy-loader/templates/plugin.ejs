@@ -3,6 +3,7 @@ import {
   <%= options.components.join(',\n  ') %>
 } from 'buefy';
 
+import { merge } from 'buefy/src/utils/helpers'
 import config, { setOptions } from 'buefy/src/utils/config'
 import { registerComponentProgrammatic } from 'buefy/src/utils/plugins'
 import ConfigComponent from 'buefy/src/utils/ConfigComponent'

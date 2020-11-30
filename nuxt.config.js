@@ -58,5 +58,9 @@ export default {
         config.resolve.symlinks = false;
       }
     },
+    transpile: ['buefy'],
+    babel: {
+      sourceType: 'unambiguous',
+    },
   },
 };
