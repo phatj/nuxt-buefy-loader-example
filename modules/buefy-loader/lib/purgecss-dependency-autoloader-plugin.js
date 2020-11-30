@@ -60,22 +60,22 @@ export class PurgeCSSDependencyAutoloaderPlugin {
     const dependencies = [];
 
     for (const chunk of chunks) {
-      // match normal or concatenated modules
-      const modules = chunk
-        .getModules()
-        .filter(({ request, _identifier }) =>
-          [String(request), String(_identifier)].some((value) =>
-            value.match(this.pattern)
-          )
+      for (const {
+        _identifier,
+        buildInfo: { fileDependencies },
+      } of chunk.getModules()) {
+        if (!fileDependencies) {
+          continue;
+        }
+
+        const deps = Array.from(fileDependencies).filter((value) =>
+          value.match(this.pattern)
         );
 
-      for (const module of modules) {
-        this.logger.debug(
-          module._identifier,
-          chunk.name,
-          module.buildInfo.fileDependencies
-        );
-        dependencies.push(...module.buildInfo.fileDependencies);
+        if (deps.length) {
+          this.logger.debug(_identifier, chunk.name, deps);
+          dependencies.push(...deps);
+        }
       }
     }
 

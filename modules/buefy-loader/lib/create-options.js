@@ -1,3 +1,5 @@
+import * as Components from 'buefy';
+
 const programmaticComponents = [
   'Dialog',
   'Loading',
@@ -15,11 +17,18 @@ const defaultBuefyOptions = {
 };
 
 export const createOptions = (components = [], buefy = {}) => {
+  const validComponentNames = Object.keys(Components).filter((name) =>
+    name.match(/^[A-Z]/)
+  );
+  const filteredComponents = components
+    .concat(programmaticComponents)
+    .filter((name) => validComponentNames.includes(name));
+
   return {
     buefy: {
       ...defaultBuefyOptions,
       ...buefy,
     },
-    components: components.concat(programmaticComponents),
+    components: Array.from(new Set(filteredComponents)),
   };
 };

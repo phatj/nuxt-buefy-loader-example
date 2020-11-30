@@ -36,8 +36,21 @@ export default function BuefyLoader(moduleOptions = {}) {
   }
 
   logger.info('Autoloading purgeCSS dependencies...');
-  const { build } = this.options;
+  const { build, purgeCSS } = this.options;
 
   // Inject autoloader
   build.plugins.push(new AutoloaderPlugin('buefy', ['js', 'vue']));
+
+  if (purgeCSS) {
+    const { whitelistPatternsChildren = [], whitelistPatterns = [] } = purgeCSS;
+    const patterns = {
+      whitelistPatternsChildren,
+      whitelistPatterns,
+    };
+
+    for (const patternType in patterns) {
+      patterns[patternType].push(/navbar-/, /is-.+?by.+?/, /card-/);
+      purgeCSS[patternType] = patterns[patternType];
+    }
+  }
 }
