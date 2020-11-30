@@ -1,0 +1,22 @@
+import Vue from 'vue';
+import {
+  <%= options.components.join(',\n  ') %>
+} from 'buefy';
+
+import config, { setOptions } from 'buefy/src/utils/config'
+import { registerComponentProgrammatic } from 'buefy/src/utils/plugins'
+import ConfigComponent from 'buefy/src/utils/ConfigComponent'
+
+export default () => {
+  [
+    <%= options.components.join(',\n    ') %>
+  ].forEach((component) => Vue.use(component));
+
+  setOptions(merge(
+    config,
+    <%= JSON.stringify(options.buefy, null, 6)%>,
+    true
+  ));
+
+  registerComponentProgrammatic(Vue, 'config', ConfigComponent);
+};

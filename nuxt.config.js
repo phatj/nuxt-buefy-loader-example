@@ -1,3 +1,5 @@
+import { parseISO } from 'date-fns';
+
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
@@ -14,7 +16,7 @@ export default {
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: [],
+  css: ['@/assets/styles/main.scss'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [],
@@ -24,16 +26,37 @@ export default {
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
+    [
+      '~/modules/buefy-loader',
+      {
+        defaultDateParser: (date) => parseISO(date),
+      },
+    ],
+    'nuxt-purgecss',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    // https://go.nuxtjs.dev/buefy
-    'nuxt-buefy',
-  ],
+  modules: [],
+
+  styleResources: {
+    scss: ['~assets/styles/variables.scss'],
+  },
+
+  /**
+   * Purge CSS configuration
+   */
+  purgeCSS: {
+    mode: 'webpack',
+  },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {},
-}
+  build: {
+    extractCSS: process.env.NODE_ENV === 'production',
+    extend(config, { isDev, isClient }) {
+      if (isDev) {
+        config.devtool = isClient ? 'source-map' : 'inline-source-map';
+        config.resolve.symlinks = false;
+      }
+    },
+  },
+};
